@@ -98,36 +98,37 @@ module new_test;
 	reg [63:0] count;
 	initial begin
 		// Initialize Inputs
+		count = 0;
 		clk = 0;
 		rst_n = 1;
-		in_tt_data = 0;
+		in_tt_data = 64'h1234_4321_0000_0000;
 		in_tt_ctrl = 0;
 		in_tt_wr = 1;
 		in_buffer_rdy = 1;
 		in_table_wr = 0;
 		in_port_number = 3;
 		in_buffer_number = 2;
-		in_window_start = 10;
-		in_window_end = 50;
-		in_global_time = 0;
-		in_flow_id = 0;
+		in_window_start = 64'h1234_4321_0000_0010;
+		in_window_end = 64'h1234_4321_0000_0050;
+		in_global_time = 64'h1234_4321_0000_0000;
+		in_flow_id = 16'h1234;
 		in_tt_flag = 0;
-		in_tt_length = 0;
+		in_tt_length = 16'h4321;
 		
 		// Wait 100 ns for global reset to finish
 		#100;
       forever begin
-		#4 clk = ~clk;
-		#1
+		#4.7 clk = ~clk;
+		#0.3
 		in_tt_data = in_tt_data + 1;
 		in_tt_ctrl = 0;
 		in_tt_wr = 0;
 		in_table_wr = out_table_rdy;
 		count = count + 1;
 		in_global_time = in_global_time+1;
-		if(out_tt_rdy == 1) begin
+	//	if(out_tt_rdy == 1) begin
 		in_tt_wr = 1;
-		end
+		//end
 		if(in_tt_data % 10 == 0)begin
 		in_tt_ctrl = 1;
 		end
@@ -135,8 +136,8 @@ module new_test;
 		in_window_start = in_window_start + 1;
 		in_window_end = in_window_end + 1;
 		end
-		#4 clk = ~clk;
-		#1 ;
+		#4.7 clk = ~clk;
+		#0.3 ;
 		end
 		// Add stimulus here
 
